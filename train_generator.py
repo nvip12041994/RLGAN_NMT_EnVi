@@ -32,7 +32,7 @@ options.add_generator_model_args(parser)
 options.add_discriminator_model_args(parser)
 options.add_generation_args(parser)
 
-def main(args):
+def train_g(args):
     use_cuda = (len(args.gpuid) >= 1)
     print("{0} GPU(s) are available".format(cuda.device_count()))
 
@@ -234,4 +234,4 @@ if __name__ == "__main__":
     options = ret[0]
     if ret[1]:
         logging.warning(f"unknown arguments: {parser.parse_known_args()[1]}")
-    main(options)
+    train_g(options)
