@@ -19,8 +19,15 @@ from generator import LSTMModel
 root_logger= logging.getLogger()
 root_logger.setLevel(logging.DEBUG) # or whatever
 handler = logging.FileHandler('test.log', 'w', 'utf-8') # or whatever
-handler.setFormatter(logging.Formatter(fmt = '%(asctime)s %(levelname)s: %(message)s', datefmt = '%Y-%m-%d %H:%M:%S')) # or whatever
+logFormatter=logging.Formatter(fmt = '%(asctime)s %(levelname)s: %(message)s', datefmt = '%Y-%m-%d %H:%M:%S')
+handler.setFormatter(logFormatter) # or whatever
 root_logger.addHandler(handler)
+
+
+consoleHandler = logging.StreamHandler()
+consoleHandler.setFormatter(logFormatter)
+root_logger.addHandler(consoleHandler)
+
 
 parser = argparse.ArgumentParser(description="Adversarial-NMT.")
 
