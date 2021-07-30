@@ -60,14 +60,14 @@ def main(args):
             args.data, 'test', len(dataset.splits['test'])))
 
     # Set model parameters
-    # args.encoder_embed_dim = 1000
-    # args.encoder_layers = 1
-    # args.encoder_dropout_out = 0
-    # args.decoder_embed_dim = 1000
-    # args.decoder_layers = 2
-    # args.decoder_out_embed_dim = 1000
-    # args.decoder_dropout_out = 0
-    # args.bidirectional = False
+    args.encoder_embed_dim = 1000
+    args.encoder_layers = 1
+    args.encoder_dropout_out = 0
+    args.decoder_embed_dim = 1000
+    args.decoder_layers = 2
+    args.decoder_out_embed_dim = 1000
+    args.decoder_dropout_out = 0
+    args.bidirectional = False
 
     # Load model
     g_model_path = 'checkpoints/generator/best_gmodel.pt'
