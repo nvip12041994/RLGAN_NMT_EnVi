@@ -16,9 +16,11 @@ import utils
 from meters import AverageMeter
 from generator import LSTMModel
 
-logging.basicConfig(
-    format='%(asctime)s %(levelname)s: %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S', level=logging.DEBUG)
+root_logger= logging.getLogger()
+root_logger.setLevel(logging.DEBUG) # or whatever
+handler = logging.FileHandler('test.log', 'w', 'utf-8') # or whatever
+handler.setFormatter(logging.Formatter(fmt = '%(asctime)s %(levelname)s: %(message)s', datefmt = '%Y-%m-%d %H:%M:%S')) # or whatever
+root_logger.addHandler(handler)
 
 parser = argparse.ArgumentParser(description="Adversarial-NMT.")
 
@@ -106,7 +108,7 @@ def train_g(args):
     lr = optimizer.param_groups[0]['lr']
     # main training loop
     while lr > args.min_g_lr and epoch_i <= max_epoch:
-        logging.info("At {0}-th epoch.".format(epoch_i))
+        root_logger.info("At {0}-th epoch.".format(epoch_i))
 
         seed = args.seed + epoch_i
         torch.manual_seed(seed)
@@ -153,7 +155,7 @@ def train_g(args):
             logging_loss = loss.item() / sample_size / math.log(2)
             logging_meters['bsz'].update(nsentences)
             logging_meters['train_loss'].update(logging_loss, sample_size)
-            logging.debug(
+            root_logger.debug(
                 "g loss at batch {0}: {1:.3f}, batch size: {2}, lr={3}".format(i, logging_meters['train_loss'].avg,
                                                                                round(
                                                                                    logging_meters['bsz'].avg),
@@ -209,14 +211,14 @@ def train_g(args):
                     0) if args.sentence_avg else sample['ntokens']
                 loss = loss.item() / sample_size / math.log(2)
                 logging_meters['valid_loss'].update(loss, sample_size)
-                logging.debug("g dev loss at batch {0}: {1:.3f}".format(
+                root_logger.debug("g dev loss at batch {0}: {1:.3f}".format(
                     i, logging_meters['valid_loss'].avg))
 
         # update learning rate
         lr_scheduler.step(logging_meters['valid_loss'].avg)
         lr = optimizer.param_groups[0]['lr']
 
-        logging.info(
+        root_logger.info(
             "Average g loss value per instance is {0} at the end of epoch {1}".format(logging_meters['valid_loss'].avg,
                                                                                       epoch_i))
         torch.save(generator.state_dict(), open(
