@@ -150,7 +150,7 @@ def train_g(args):
         for i, sample in enumerate(itr):
             if use_cuda:
                 # wrap input tensors in cuda tensors
-                sample = utils.make_variable(sample, cuda=cuda)
+                sample = utils.move_to_cuda(sample, cuda=cuda)
 
             sys_out_batch = generator(sample)
             out_batch = sys_out_batch.contiguous().view(-1, sys_out_batch.size(-1))
