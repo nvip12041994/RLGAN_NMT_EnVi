@@ -107,7 +107,7 @@ def main(args):
     )
 
     translator = SequenceGenerator(
-        generator, dst_dict,
+        [generator], dst_dict,
         beam_size=args.beam, stop_early=(not args.no_early_stop),
         normalize_scores=(not args.unnormalized), len_penalty=args.lenpen,
         unk_penalty=args.unkpen)
