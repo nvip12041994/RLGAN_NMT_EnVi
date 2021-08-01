@@ -94,7 +94,7 @@ def main(args):
         generator.cpu()
 
     max_positions = generator.encoder.max_positions()
-
+    
     testloader = dataset.eval_dataloader(
         'test',
         max_sentences=args.max_sentences,
@@ -103,7 +103,8 @@ def main(args):
     )
 
     translator = SequenceGenerator(
-        generator, beam_size=args.beam, stop_early=(not args.no_early_stop),
+        generator, dataset.dst,
+        beam_size=args.beam, stop_early=(not args.no_early_stop),
         normalize_scores=(not args.unnormalized), len_penalty=args.lenpen,
         unk_penalty=args.unkpen)
 
