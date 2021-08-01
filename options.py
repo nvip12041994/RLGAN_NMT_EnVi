@@ -17,10 +17,10 @@ def add_general_args(parser):
 def add_dataset_args(parser):
     parser.add_argument("--data", required=True,
                         help="File prefix for training set.")
-    parser.add_argument("--src_lang", default="de",
-                        help="Source Language. (default = de)")
-    parser.add_argument("--trg_lang", default="en",
-                        help="Target Language. (default = en)")
+    parser.add_argument("--src_lang", default="en",
+                        help="Source Language. (default = en)")
+    parser.add_argument("--trg_lang", default="vi",
+                        help="Target Language. (default = vi)")
     parser.add_argument('--max-source-positions', default=1024, type=int, metavar='N',
                        help='max number of tokens in the source sequence')
     parser.add_argument('--max-target-positions', default=1024, type=int, metavar='N',

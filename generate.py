@@ -51,7 +51,11 @@ def main(args):
         if args.src_lang is None or args.trg_lang is None:
             # record inferred languages in args, so that it's saved in checkpoints
             args.src_lang, args.trg_lang = dataset.src, dataset.dst
-
+        src_dict, dst_dict = data.load_dictionaries(
+            args.data,
+            args.src_lang,
+            args.trg_lang,
+        )
         print('| [{}] dictionary: {} types'.format(
             dataset.src, len(dataset.src_dict)))
         print('| [{}] dictionary: {} types'.format(
@@ -103,7 +107,7 @@ def main(args):
     )
 
     translator = SequenceGenerator(
-        generator, dataset.dst,
+        generator, dst_dict,
         beam_size=args.beam, stop_early=(not args.no_early_stop),
         normalize_scores=(not args.unnormalized), len_penalty=args.lenpen,
         unk_penalty=args.unkpen)
