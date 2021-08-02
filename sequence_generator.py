@@ -166,6 +166,10 @@ class SequenceGenerator(object):
             assert bbsz_idx.numel() == eos_scores.numel()
 
             # clone relevant token and attention tensors
+            # print("-------")
+            # print(bbsz_idx)
+            # print("-------")
+            bbsz_idx = torch.round(bbsz_idx).long()
             tokens_clone = tokens.index_select(0, bbsz_idx)
             tokens_clone = tokens_clone[:, 1:step+2]  # skip the first index, which is EOS
             tokens_clone[:, step] = self.eos
@@ -246,8 +250,8 @@ class SequenceGenerator(object):
 
             cand_scores = buffer('cand_scores', type_of=scores)
             cand_indices = buffer('cand_indices')
-            cand_beams = buffer('cand_beams')
-            eos_bbsz_idx = buffer('eos_bbsz_idx')
+            cand_beams = buffer('cand_beams').float()
+            eos_bbsz_idx = buffer('eos_bbsz_idx').float()
             eos_scores = buffer('eos_scores', type_of=scores)
             if step < maxlen:
                 # take the best 2 x beam_size predictions. We'll choose the first
@@ -257,6 +261,11 @@ class SequenceGenerator(object):
                     k=min(cand_size, probs.view(bsz, -1).size(1) - 1),  # -1 so we never select pad
                     out=(cand_scores, cand_indices),
                 )
+                # print("-------")
+                # print(cand_indices)
+                # print(self.vocab_size)
+                # print(cand_beams)
+                # print("-------")
                 torch.div(cand_indices, self.vocab_size, out=cand_beams)
                 cand_indices.fmod_(self.vocab_size)
             else:
@@ -281,6 +290,11 @@ class SequenceGenerator(object):
             eos_mask = cand_indices.eq(self.eos)
             if step >= self.minlen:
                 # only consider eos when it's among the top beam_size indices
+                # print("-------")
+                # print(cand_bbsz_idx)
+                # print(eos_mask)
+                # print(eos_bbsz_idx)
+                # print("-------")
                 torch.masked_select(
                     cand_bbsz_idx[:, :beam_size],
                     mask=eos_mask[:, :beam_size],
@@ -317,18 +331,27 @@ class SequenceGenerator(object):
                 active_mask, k=beam_size, dim=1, largest=False,
                 out=(_ignore, active_hypos)
             )
-            active_bbsz_idx = buffer('active_bbsz_idx')
+            active_bbsz_idx = buffer('active_bbsz_idx').float()
+            # print("-------")
+            # print(cand_bbsz_idx)
+            # print(active_hypos)
+            # print(active_bbsz_idx)
+            # print("-------")
             torch.gather(
                 cand_bbsz_idx, dim=1, index=active_hypos,
                 out=active_bbsz_idx,
             )
+            # print(active_bbsz_idx)
+            # print("-------")
             active_scores = torch.gather(
                 cand_scores, dim=1, index=active_hypos,
                 out=scores[:, step].view(bsz, beam_size),
             )
-            active_bbsz_idx = active_bbsz_idx.view(-1)
+            active_bbsz_idx = torch.round(active_bbsz_idx.view(-1)).long()
             active_scores = active_scores.view(-1)
-
+            # print(active_bbsz_idx)
+            # print("-------")
+            
             # copy tokens and scores for active hypotheses
             torch.index_select(
                 tokens[:, :step+1], dim=0, index=active_bbsz_idx,
