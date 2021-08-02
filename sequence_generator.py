@@ -10,7 +10,7 @@ import torch
 import utils
 import torch.nn.functional as F
 import warnings 
-warnings.filterwarnings("ignore")
+#warnings.filterwarnings("ignore")
 
 class SequenceGenerator(object):
     def __init__(self, model, beam_size=1, minlen=1, maxlen=None,
@@ -300,13 +300,13 @@ class SequenceGenerator(object):
                 torch.masked_select(
                     cand_bbsz_idx[:, :beam_size].long(),
                     mask=eos_mask[:, :beam_size],
-                    out=eos_bbsz_idx,
+                    out=eos_bbsz_idx.resize_(0),
                 )
                 if eos_bbsz_idx.numel() > 0:
                     torch.masked_select(
                         cand_scores[:, :beam_size],
                         mask=eos_mask[:, :beam_size],
-                        out=eos_scores,
+                        out=eos_scores.resize_(0),
                     )
                     num_remaining_sent -= finalize_hypos(
                         step, eos_bbsz_idx, eos_scores, cand_scores)
