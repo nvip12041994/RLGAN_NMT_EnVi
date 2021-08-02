@@ -141,7 +141,6 @@ class SequenceGenerator(object):
             encoder_out = model.encoder(**encoder_input)
             new_order = torch.arange(bsz).view(-1, 1).repeat(1, beam_size).view(-1)
             new_order = new_order.to(src_tokens.device)
-            print(vars(model.encoder))
             encoder_out = model.encoder.reorder_encoder_out(encoder_out, new_order)
             encoder_outs.append(encoder_out)
 
