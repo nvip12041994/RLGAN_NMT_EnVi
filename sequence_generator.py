@@ -9,6 +9,8 @@ import math
 import torch
 import utils
 import torch.nn.functional as F
+import warnings 
+warnings.filterwarnings("ignore")
 
 class SequenceGenerator(object):
     def __init__(self, model, beam_size=1, minlen=1, maxlen=None,
@@ -168,15 +170,14 @@ class SequenceGenerator(object):
             # clone relevant token and attention tensors
             # print("-------")
             # print(bbsz_idx)
-            # print("-------")
-            bbsz_idx = torch.round(bbsz_idx).long()
-            tokens_clone = tokens.index_select(0, bbsz_idx)
+            # print("-------")            
+            tokens_clone = tokens.index_select(0, bbsz_idx.long())
             tokens_clone = tokens_clone[:, 1:step+2]  # skip the first index, which is EOS
             tokens_clone[:, step] = self.eos
-            attn_clone = attn.index_select(0, bbsz_idx)[:, :, 1:step+2]
+            attn_clone = attn.index_select(0, bbsz_idx.long())[:, :, 1:step+2]
 
             # compute scores per token position
-            pos_scores = scores.index_select(0, bbsz_idx)[:, :step+1]
+            pos_scores = scores.index_select(0, bbsz_idx.long())[:, :step+1]
             pos_scores[:, step] = eos_scores
             # convert from cumulative to per-position scores
             pos_scores[:, 1:] = pos_scores[:, 1:] - pos_scores[:, :-1]
@@ -186,7 +187,7 @@ class SequenceGenerator(object):
                 eos_scores /= (step+1)**self.len_penalty
 
             sents_seen = set()
-            for i, (idx, score) in enumerate(zip(bbsz_idx.tolist(), eos_scores.tolist())):
+            for i, (idx, score) in enumerate(zip(bbsz_idx.long().tolist(), eos_scores.tolist())):
                 sent = idx // beam_size
                 sents_seen.add(sent)
 
@@ -251,7 +252,7 @@ class SequenceGenerator(object):
             cand_scores = buffer('cand_scores', type_of=scores)
             cand_indices = buffer('cand_indices')
             cand_beams = buffer('cand_beams').float()
-            eos_bbsz_idx = buffer('eos_bbsz_idx').float()
+            eos_bbsz_idx = buffer('eos_bbsz_idx')
             eos_scores = buffer('eos_scores', type_of=scores)
             if step < maxlen:
                 # take the best 2 x beam_size predictions. We'll choose the first
@@ -271,6 +272,7 @@ class SequenceGenerator(object):
             else:
                 # finalize all active hypotheses once we hit maxlen
                 # pick the hypothesis with the highest prob of EOS right now
+                
                 torch.sort(
                     probs[:, self.eos],
                     descending=True,
@@ -296,7 +298,7 @@ class SequenceGenerator(object):
                 # print(eos_bbsz_idx)
                 # print("-------")
                 torch.masked_select(
-                    cand_bbsz_idx[:, :beam_size],
+                    cand_bbsz_idx[:, :beam_size].long(),
                     mask=eos_mask[:, :beam_size],
                     out=eos_bbsz_idx,
                 )
