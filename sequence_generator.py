@@ -351,7 +351,7 @@ class SequenceGenerator(object):
                 cand_scores, dim=1, index=active_hypos,
                 out=scores[:, step].view(bsz, beam_size),
             )
-            active_bbsz_idx = torch.round(active_bbsz_idx.view(-1)).long()
+            active_bbsz_idx = active_bbsz_idx.view(-1).long()
             active_scores = active_scores.view(-1)
             # print(active_bbsz_idx)
             # print("-------")
@@ -362,15 +362,21 @@ class SequenceGenerator(object):
             # print("+++++++")
             # print(cand_indices)
             # print(active_hypos)
+            # print("=====")
+            # print(tokens[:, :step+1].shape)
+            # print(tokens_buf[:, :step+1].shape)
+            # print(active_bbsz_idx)
+            # print(step)
             # copy tokens and scores for active hypotheses
             torch.index_select(
                 tokens[:, :step+1], dim=0, index=active_bbsz_idx,
-                out=tokens_buf[:, :step],
+                out=tokens_buf[:, :step+1],
             )
             torch.gather(
                 cand_indices, dim=1, index=active_hypos,
-                out=tokens_buf.view(bsz, beam_size, -1)[:, :, step],
+                out=tokens_buf.view(bsz, beam_size, -1)[:, :, step+1],
             )
+            
             if step > 0:
                 torch.index_select(
                     scores[:, :step], dim=0, index=active_bbsz_idx,
