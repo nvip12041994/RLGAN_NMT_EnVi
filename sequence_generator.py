@@ -11,6 +11,8 @@ import utils
 import torch.nn.functional as F
 import warnings 
 #warnings.filterwarnings("ignore")
+import os
+os.environ['CUDA_LAUNCH_BLOCKING'] = "1" 
 
 class SequenceGenerator(object):
     def __init__(self, model, beam_size=1, minlen=1, maxlen=None,
