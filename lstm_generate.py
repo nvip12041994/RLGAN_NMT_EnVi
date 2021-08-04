@@ -59,7 +59,7 @@ def main(args):
         print('| {} {} {} examples'.format(
             args.data, 'test', len(dataset.splits['test'])))
 
-    """ # Set model parameters
+    # Set model parameters
     args.encoder_embed_dim = 1000
     args.encoder_layers = 2 # 4
     args.encoder_dropout_out = 0
@@ -83,9 +83,8 @@ def main(args):
     # 2. overwrite entries in the existing state dict
     model_dict.update(pretrained_dict)
     # 3. load the new state dict
-    generator.load_state_dict(model_dict) """
-    g_model_path = args.model_file
-    generator = torch.load(g_model_path)
+    generator.load_state_dict(model_dict)
+    
     generator.eval()
 
     print("Generator loaded successfully!")
@@ -111,7 +110,7 @@ def main(args):
 
     if use_cuda:
         translator.cuda()
-    count = 0
+    #count = 0
     with open('predictions.txt', 'wb') as translation_writer:
         with open('real.txt', 'wb') as ground_truth_writer:
 
@@ -136,8 +135,8 @@ def main(args):
 
                     translation_writer.write(hypo_str.encode('utf-8'))
                     ground_truth_writer.write(target_str.encode('utf-8'))
-                    count += 1
-                    print('sentence count = %d' % count)
+                    #count += 1
+                    #print('sentence count = %d' % count)
 
 
 if __name__ == "__main__":
