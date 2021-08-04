@@ -1,1 +1,1 @@
-python joint_train.py --data new-data-bin/iwslt15.tokenized.en-vi  --src_lang en --trg_lang vi --learning_rate 1e-3 --joint-batch-size 64 --gpuid 0 --clip-norm 1.0 --epochs 10
+python joint_train.py --data new-data-bin/iwslt15.tokenized.en-vi  --src_lang en --trg_lang vi --learning_rate 1e-4 --joint-batch-size 64 --gpuid 0 --clip-norm 1.0 --epochs 20
