@@ -25,6 +25,7 @@ options.add_distributed_training_args(parser)
 options.add_generation_args(parser)
 options.add_generator_model_args(parser)
 #python3 generate.py --model_file checkpoints/generator/best_gmodel.pt --data new-data-bin/iwslt15.tokenized.en-vi/ --src_lang en --trg_lang vi --batch-size 16 --gpuid 0
+#python3 generate.py --model_file checkpoints/joint/best_gmodel.pt --data new-data-bin/iwslt15.tokenized.en-vi/ --src_lang en --trg_lang vi --batch-size 16 --gpuid 0
 
 def main(args):
     use_cuda = (len(args.gpuid) >= 1)
@@ -58,7 +59,7 @@ def main(args):
         print('| {} {} {} examples'.format(
             args.data, 'test', len(dataset.splits['test'])))
 
-    # Set model parameters
+    """ # Set model parameters
     args.encoder_embed_dim = 1000
     args.encoder_layers = 2 # 4
     args.encoder_dropout_out = 0
@@ -82,7 +83,9 @@ def main(args):
     # 2. overwrite entries in the existing state dict
     model_dict.update(pretrained_dict)
     # 3. load the new state dict
-    generator.load_state_dict(model_dict)
+    generator.load_state_dict(model_dict) """
+    g_model_path = args.model_file
+    generator = torch.load(g_model_path)
     generator.eval()
 
     print("Generator loaded successfully!")
