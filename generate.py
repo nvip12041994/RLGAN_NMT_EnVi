@@ -133,8 +133,8 @@ def main(args):
 
                     translation_writer.write(hypo_str.encode('utf-8'))
                     ground_truth_writer.write(target_str.encode('utf-8'))
-        count += 1
-        print('sentence count = %d' % count)
+                    count += 1
+                    print('sentence count = %d' % count)
 
 
 if __name__ == "__main__":
