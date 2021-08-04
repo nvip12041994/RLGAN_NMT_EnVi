@@ -15,7 +15,7 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S', level=logging.DEBUG)
 
 parser = argparse.ArgumentParser(
-    description="Driver program for JHU Adversarial-NMT.")
+    description="Adversarial-NMT.")
 
 # Load args
 options.add_general_args(parser)
@@ -24,14 +24,13 @@ options.add_checkpoint_args(parser)
 options.add_distributed_training_args(parser)
 options.add_generation_args(parser)
 options.add_generator_model_args(parser)
-
+#python3 generate.py --model_file checkpoints/generator/best_gmodel.pt --data new-data-bin/iwslt15.tokenized.en-vi/ --src_lang en --trg_lang vi --batch-size 16 --gpuid 0
 
 def main(args):
-
     use_cuda = (len(args.gpuid) >= 1)
     if args.gpuid:
         cuda.set_device(args.gpuid[0])
-
+        
         # Load dataset
         if args.replace_unk is None:
             dataset = data.load_dataset(
@@ -70,7 +69,7 @@ def main(args):
     args.bidirectional = False
 
     # Load model
-    g_model_path = 'checkpoints/generator/best_gmodel.pt'
+    g_model_path = args.model_file
     assert os.path.exists(g_model_path)
     generator = LSTMModel(args, dataset.src_dict,
                           dataset.dst_dict, use_cuda=use_cuda)
@@ -109,7 +108,7 @@ def main(args):
 
     if use_cuda:
         translator.cuda()
-
+    count = 0
     with open('predictions.txt', 'wb') as translation_writer:
         with open('real.txt', 'wb') as ground_truth_writer:
 
@@ -134,6 +133,8 @@ def main(args):
 
                     translation_writer.write(hypo_str.encode('utf-8'))
                     ground_truth_writer.write(target_str.encode('utf-8'))
+        count += 1
+        print('sentence count = %d' % count)
 
 
 if __name__ == "__main__":
