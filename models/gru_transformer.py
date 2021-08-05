@@ -24,29 +24,7 @@ class GRUTransformerModel(TransformerModel):
 class GRUTransformerEncoder(TransformerEncoder):
     def __init__(self, args, dictionary, embed_tokens):
         super().__init__(args, dictionary, embed_tokens)
-        self.emb_ctx = nn.GRU(
-            input_size=embed_tokens.embedding_dim,
-            hidden_size=embed_tokens.embedding_dim // 2,
-            num_layers=1,
-            bidirectional=True,
-        )
-
-    def forward_embedding(self, src_tokens):
-        # embed tokens and positions
-        x = embed = self.embed_scale * self.embed_tokens(src_tokens)
-        if self.embed_positions is not None:
-            x = embed + self.embed_positions(src_tokens)
-
-        # contextualize embeddings
-        x = x.transpose(0, 1)
-        x = self.dropout_module(x)
-        x, _ = self.emb_ctx.forward(x)
-        x = x.transpose(0, 1)
-
-        if self.layernorm_embedding is not None:
-            x = self.layernorm_embedding(x)
-        x = self.dropout_module(x)
-        return x, embed
+        
 
 
 @register_model_architecture("gru_transformer", "gru_transformer")

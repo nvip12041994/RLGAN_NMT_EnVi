@@ -4,3 +4,4 @@
 # LICENSE file in the root directory of this source tree.
 
 from .models import gru_transformer  # noqa
+from .criterions import RL
