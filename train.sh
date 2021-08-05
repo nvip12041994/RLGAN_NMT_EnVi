@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-data=/home/nvip/data/RLGAN_NMT_EnVi/new-data-bin/iwslt15.tokenized.en-vi/
+data=./new-data-bin/iwslt15.tokenized.en-vi/
 fairseq-train ${data} --task translation --user-dir /home/s1910443/experiment/change_seq/RLGAN_NMT_EnVi \
     --arch gru_transformer --encoder-layers 2 --decoder-layers 2 --dropout 0.3 --share-all-embeddings \
     --optimizer adam --adam-betas '(0.9, 0.98)' \
