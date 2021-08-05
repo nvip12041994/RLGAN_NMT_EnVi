@@ -13,7 +13,7 @@ fairseq-train ${DATA_PATH} \
 --optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.1 \
 # --criterion RL \
 # --sample-beam 5 \
---encoder-dropout 0.2 --decoder-dropout 0.2 \
+--dropout 0.2 \
 --optimizer adam --lr 0.005 --lr-shrink 0.5 \
 --max-tokens 12000 \
 --save-dir $MODEL_PATH \
