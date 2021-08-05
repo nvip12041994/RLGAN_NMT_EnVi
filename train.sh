@@ -18,6 +18,8 @@ fairseq-train ${DATA_PATH} \
 --dropout 0.3 --weight-decay 0.0001 \
 --optimizer adam --lr 5e-4 --lr-scheduler inverse_sqrt --warmup-updates 4000 \
 --max-tokens 4096 \
+--criterion RL \
+--sample-beam 5 \
 --save-dir $MODEL_PATH \
 --seed 2048 \
 --restore-file $MODEL_PATH/checkpoint_best.pt
