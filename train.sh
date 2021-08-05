@@ -12,7 +12,7 @@ MODEL_PATH=./model/
 
 
 fairseq-train ${DATA_PATH} \
---user-dir /home/s1910443/experiment/change_seq/RLGAN_NMT_EnVi \
+--user-dir ./nvip_dir \
 --arch $ARCH \
 --optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.1 \
 --dropout 0.3 --weight-decay 0.0001 \
