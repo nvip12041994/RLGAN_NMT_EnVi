@@ -6,8 +6,6 @@
 # can be found in the PATENTS file in the same directory.
 
 import time
-
-
 class AverageMeter(object):
     """Computes and stores the average and current value"""
     def __init__(self):
@@ -28,10 +26,11 @@ class AverageMeter(object):
 
 class TimeMeter(object):
     """Computes the average occurrence of some event per second"""
-    def __init__(self):
-        self.reset()
+    def __init__(self, init=0):
+        self.reset(init)
 
-    def reset(self):
+    def reset(self, init=0):
+        self.init = init
         self.start = time.time()
         self.n = 0
 
@@ -40,12 +39,11 @@ class TimeMeter(object):
 
     @property
     def avg(self):
-        delta = time.time() - self.start
-        return self.n / delta
+        return self.n / self.elapsed_time
 
     @property
     def elapsed_time(self):
-        return time.time() - self.start
+        return self.init + (time.time() - self.start)
 
 
 class StopwatchMeter(object):

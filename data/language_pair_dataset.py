@@ -117,7 +117,10 @@ class LanguagePairDataset(FairseqDataset):
         self.max_target_positions = max_target_positions
         self.shuffle = shuffle
         self.input_feeding = input_feeding
-
+        
+    def get_tgt_pad(self):
+        return self.tgt_dict.pad()
+    
     def __getitem__(self, index):
         return {
             'id': index,
