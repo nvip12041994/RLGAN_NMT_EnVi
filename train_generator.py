@@ -461,15 +461,26 @@ def cli_main(
     modify_parser: Optional[Callable[[argparse.ArgumentParser], None]] = None
 ) -> None:
     parser = options.get_training_parser()
-    generator_option = ['v060_data-bin/iwslt14.tokenized.en-vi', '-a', 'transformer_iwslt_de_en', '--optimizer', 'adam', '--lr', '0.0005',
-                        '-s' 'en', '-t' 'vi',   
-                        '--label-smoothing', '0.1', '--dropout', '0.3', 
-                        '--max-tokens', '4000', 
-                        '--min-lr', '1e-09', 
+    generator_option = ['data-bin/iwslt15.tokenized.en-vi',
+                        '--arch', 'transformer_iwslt_de_en',
+                        'wandb-project', 'test_docker',
+                        '--optimizer', 'adam', '--adam-betas', '(0.9, 0.98)', 
+                        '--lr', '0.0005', '--clip-norm', '0.0',   
+                        '--label-smoothing', '0.1', '--seed', '2048',
+                        '--max-tokens', '4096', 
                         '--lr-scheduler', 'inverse_sqrt',
-                        '--weight-decay', '0.0001',   
+                        '--weight-decay', '0.0',   
                         '--criterion', 'label_smoothed_cross_entropy',
-                        '--max-update', '50000', '--warmup-updates', '4000', '--warmup-init-lr' ,'1e-07', '--adam-betas', '(0.9, 0.98)',
+                        '--max-update', '800000', '--warmup-updates', '4000', '--warmup-init-lr' ,'1e-07',
+                        '--no-progress-bar',
+                        '--bpe','subword_nmt',
+                        '--eval-bleu',
+                        '--eval-bleu-args', '{"beam": 5, "max_len_a": 1.2, "max_len_b": 10}',
+                        '--eval-bleu-remove-bpe',
+                        '--best-checkpoint-metric', 'bleu',
+                        '--maximize-best-checkpoint-metric',
+                        '--restore-file', 'checkpoints/checkpoint_best.pt',
+                        '--update-freq', '2',
                         '--save-dir', 'checkpoints/transformer']
     
     args = options.parse_args_and_arch(parser, input_args= generator_option, modify_parser=modify_parser)
