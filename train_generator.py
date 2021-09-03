@@ -462,7 +462,7 @@ def cli_main(
 ) -> None:
     parser = options.get_training_parser()
     generator_option = ['data-bin/iwslt15.tokenized.en-vi',
-                        '--arch', 'transformer',
+                        '--arch', 'transformer_iwslt_de_en',
                         '--optimizer', 'adam', '--adam-betas', '(0.9, 0.98)', 
                         '--lr', '0.0005', '--clip-norm', '0.0',   
                         '--label-smoothing', '0.1', '--seed', '2048',
