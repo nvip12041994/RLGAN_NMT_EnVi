@@ -479,7 +479,7 @@ def cli_main(
                         '--eval-bleu-remove-bpe',
                         '--best-checkpoint-metric', 'bleu',
                         '--maximize-best-checkpoint-metric',
-                        '--restore-file', 'checkpoints/checkpoint_best.pt',
+                        '--restore-file', 'checkpoints/transformer/checkpoint_best.pt',
                         '--update-freq', '2',
                         '--save-dir', 'checkpoints/transformer']
     
