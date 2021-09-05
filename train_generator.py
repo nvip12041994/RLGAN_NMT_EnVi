@@ -78,7 +78,12 @@ def main(cfg: FairseqConfig) -> None:
             return
 
     # Setup task, e.g., translation, language modeling, etc.
+    # print("================================================================")
+    # print("Setup task, e.g., translation, language modeling, etc.")
+    # print(cfg.task)
+    # print("================================================================")
     task = tasks.setup_task(cfg.task)
+    
     # Load valid dataset (we load training data below, based on the latest checkpoint)
     for valid_sub_split in cfg.dataset.valid_subset.split(","):
         task.load_dataset(valid_sub_split, combine=False, epoch=1)
@@ -144,6 +149,8 @@ def main(cfg: FairseqConfig) -> None:
     lr = trainer.get_lr()
     train_meter = meters.StopwatchMeter()
     train_meter.start()
+    print("Start training")
+    
     while epoch_itr.next_epoch_idx <= max_epoch:
         if lr <= cfg.optimization.stop_min_lr:
             logger.info(
@@ -170,7 +177,7 @@ def main(cfg: FairseqConfig) -> None:
         )
     train_meter.stop()
     logger.info("done training in {:.1f} seconds".format(train_meter.sum))
-
+    
     # ioPath implementation to wait for all asynchronous file writes to complete.
     if cfg.checkpoint.write_checkpoints_asynchronously:
         logger.info(
@@ -466,7 +473,8 @@ def cli_main(
                         '--optimizer', 'adam', '--adam-betas', '(0.9, 0.98)', 
                         '--lr', '0.0005', '--clip-norm', '0.0',   
                         '--label-smoothing', '0.1', '--seed', '2048',
-                        '--max-tokens', '4096', 
+                        '--max-tokens', '4096',
+                        '--max-epoch', '17',
                         '--lr-scheduler', 'inverse_sqrt',
                         '--weight-decay', '0.0',   
                         '--criterion', 'label_smoothed_cross_entropy',
