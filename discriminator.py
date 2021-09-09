@@ -4,18 +4,18 @@ import torch.nn.functional as F
 
 
 class Discriminator(nn.Module):
-    def __init__(self, args, src_dict, dst_dict, use_cuda = True):
+    def __init__(self, cfg, src_dict, dst_dict, use_cuda = True):
         super(Discriminator, self).__init__()
 
         self.src_dict_size = len(src_dict)
         self.trg_dict_size = len(dst_dict)
         self.pad_idx = dst_dict.pad()
-        self.fixed_max_len = args.fixed_max_len
+        #self.fixed_max_len = args.fixed_max_len
         self.use_cuda = use_cuda
 
 
-        self.embed_src_tokens = Embedding(len(src_dict), args.encoder_embed_dim, src_dict.pad())
-        self.embed_trg_tokens = Embedding(len(dst_dict), args.decoder_embed_dim, dst_dict.pad())
+        self.embed_src_tokens = Embedding(len(src_dict), cfg.model.encoder_embed_dim, src_dict.pad())
+        self.embed_trg_tokens = Embedding(len(dst_dict), cfg.model.decoder_embed_dim, dst_dict.pad())
 
 
         self.conv1 = nn.Sequential(
