@@ -188,6 +188,7 @@ def main(cfg: FairseqConfig) -> None:
             break
 
         # train for one epoch
+        # MLE training
         valid_losses, should_stop = train(cfg, trainer, task, epoch_itr)
         if should_stop:
             break
@@ -300,13 +301,13 @@ def train(
             "train_step-%d" % i
         ):
             log_output = trainer.train_step(samples)
-            print("--------------------START DEBUG---------------------------------")
-            print("SAMPLE")
-            print(samples)
-            print("----------------------------------------------------------------")
-            print("LOG_OUTPUT")
-            print(log_output)
-            print("--------------------END DEBUG----------------------------------")
+            # print("--------------------START DEBUG---------------------------------")
+            # print("SAMPLE")
+            # print(samples)
+            # print("----------------------------------------------------------------")
+            # print("LOG_OUTPUT")
+            # print(log_output)
+            # print("--------------------END DEBUG----------------------------------")
         if log_output is not None:  # not OOM, overflow, ...
             # log mid-epoch stats
             num_updates = trainer.get_num_updates()
@@ -507,8 +508,7 @@ def cli_main(
                         '--optimizer', 'adam', '--adam-betas', '(0.9, 0.98)', 
                         '--lr', '0.0005', '--clip-norm', '0.0',   
                         '--label-smoothing', '0.1', '--seed', '2048',
-                        '--max-tokens', '4096',
-                        '--batch-size', '256',
+                        '--max-tokens', '15000',
                         '--max-epoch', '16',
                         '--lr-scheduler', 'inverse_sqrt',
                         '--weight-decay', '0.0',   
