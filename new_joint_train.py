@@ -30,7 +30,7 @@ from fairseq.distributed import fsdp_enable_wrap, fsdp_wrap, utils as distribute
 from fairseq.file_io import PathManager
 from fairseq.logging import meters, metrics, progress_bar
 from fairseq.model_parallel.megatron_trainer import MegatronTrainer
-from fairseq.trainer import Trainer
+from modify_trainer import Trainer
 from omegaconf import DictConfig, OmegaConf
 
 import torch
