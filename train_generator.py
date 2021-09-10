@@ -474,7 +474,7 @@ def cli_main(
                         '--lr', '0.0005', '--clip-norm', '0.0',   
                         '--label-smoothing', '0.1', '--seed', '2048',
                         '--max-tokens', '4096',
-                        '--max-epoch', '17',
+                        '--max-epoch', '18',
                         '--lr-scheduler', 'inverse_sqrt',
                         '--weight-decay', '0.0',   
                         '--criterion', 'label_smoothed_cross_entropy',
