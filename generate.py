@@ -397,7 +397,8 @@ def _main(cfg: DictConfig, output_file):
 
 def cli_main():
     parser = options.get_generation_parser()
-    cur_model = ['./data-bin/iwslt15.tokenized.en-vi', '--path', 'checkpoints/transformer/checkpoint_best.pt']
+    cur_model = ['./data-bin/iwslt15.tokenized.en-vi', 
+                 '--path', 'checkpoints/transformer/checkpoint_best.pt']
     args = options.parse_args_and_arch(parser, input_args = cur_model)
     main(args)
 
