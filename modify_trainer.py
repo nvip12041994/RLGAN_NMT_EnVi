@@ -610,6 +610,7 @@ class Trainer(object):
     @metrics.aggregate("train")
     def train_step(self, samples, raise_oom=False):
         """Do forward, backward and parameter update."""
+        print("--------------------START DEBUG---------------------------------")
         self._set_seed()
         self.model.train()
         self.criterion.train()
@@ -639,6 +640,7 @@ class Trainer(object):
 
             try:
                 with maybe_no_sync():
+                    print("maybe_no_sync")
                     # forward and backward
                     loss, sample_size_i, logging_output = self.task.train_step(
                         sample=sample,
@@ -763,6 +765,7 @@ class Trainer(object):
             # out where it fails
             self.zero_grad()
             with NanDetector(self.get_model()):
+                print("outside maybe_no_sync")
                 for _, sample in enumerate(samples):
                     sample, _ = self._prepare_sample(sample)
                     self.task.train_step(
@@ -867,10 +870,10 @@ class Trainer(object):
             )
 
         metrics.log_stop_time("train_wall")
-        print("--------------------START DEBUG---------------------------------")
-        print("SAMPLE")
-        print(samples)
-        print(sample_size)
+        
+        # print("SAMPLE")
+        # print(samples)
+        # print(sample_size)
         # print("----------------------------------------------------------------")
         # print("LOG_OUTPUT")
         #print(logging_output)
