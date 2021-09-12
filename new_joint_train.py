@@ -33,6 +33,7 @@ from fairseq.model_parallel.megatron_trainer import MegatronTrainer
 from modify_trainer import Trainer
 from omegaconf import DictConfig, OmegaConf
 
+import random
 import torch
 from torch.autograd import Variable
 
@@ -188,8 +189,15 @@ def main(cfg: FairseqConfig) -> None:
             break
 
         # train for one epoch
-        # MLE training
-        valid_losses, should_stop = train(cfg, trainer, task, epoch_itr)
+        ## part I: use gradient policy method to train the generator
+        # use policy gradient training when random.random() > 50%
+        # if random.random()  >= 0.5:
+        #     print("Policy Gradient Training")
+        
+        # else:
+        #     # MLE training
+        #     print("MLE Training")
+        valid_losses, should_stop = train(cfg, trainer, task, epoch_itr, discriminator)
         if should_stop:
             break
 
@@ -203,6 +211,8 @@ def main(cfg: FairseqConfig) -> None:
             # don't cache epoch iterators for sharded datasets
             disable_iterator_cache=task.has_sharded_data("train"),
         )
+        # part II: train the discriminator
+        
     train_meter.stop()
     logger.info("done training in {:.1f} seconds".format(train_meter.sum))
     
@@ -246,7 +256,7 @@ def should_stop_early(cfg: DictConfig, valid_loss: float) -> bool:
 
 @metrics.aggregate("train")
 def train(
-    cfg: DictConfig, trainer: Trainer, task: tasks.FairseqTask, epoch_itr
+    cfg: DictConfig, trainer: Trainer, task: tasks.FairseqTask, epoch_itr, discriminator
 ) -> Tuple[List[Optional[float]], bool]:
     """Train the model for one epoch and return validation losses."""
     # Initialize data iterator
@@ -291,7 +301,7 @@ def train(
     progress.update_config(_flatten_config(cfg))
 
     trainer.begin_epoch(epoch_itr.epoch)
-
+    print(discriminator)
     valid_subsets = cfg.dataset.valid_subset.split(",")
     should_stop = False
     num_updates = trainer.get_num_updates()
