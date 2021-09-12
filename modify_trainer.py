@@ -867,6 +867,13 @@ class Trainer(object):
             )
 
         metrics.log_stop_time("train_wall")
+        print("--------------------START DEBUG---------------------------------")
+        # print("SAMPLE")
+        print(sample_size)
+        # print("----------------------------------------------------------------")
+        # print("LOG_OUTPUT")
+        # print(logging_output)
+        print("--------------------END DEBUG----------------------------------")
         return logging_output
 
     @metrics.aggregate("valid")
