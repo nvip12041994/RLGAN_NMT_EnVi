@@ -641,7 +641,7 @@ class Trainer(object):
             try:
                 with maybe_no_sync():
                     print("maybe_no_sync")
-                    # forward and backward
+                    # forward and backward                    
                     loss, sample_size_i, logging_output = self.task.train_step(
                         sample=sample,
                         model=self.model,
@@ -650,6 +650,9 @@ class Trainer(object):
                         update_num=self.get_num_updates(),
                         ignore_grad=is_dummy_batch,
                     )
+                    with torch.no_grad():
+                        sys_out_batch = self.model(sample) # 64 X 50 X 6632
+                    print(sys_out_batch)
                     del loss
 
                 logging_outputs.append(logging_output)
