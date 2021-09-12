@@ -650,9 +650,10 @@ class Trainer(object):
                         update_num=self.get_num_updates(),
                         ignore_grad=is_dummy_batch,
                     )
-                    with torch.no_grad():
-                        sys_out_batch = self.model(sample) # 64 X 50 X 6632
-                    print(sys_out_batch)
+                    print(self.model)
+                    # with torch.no_grad():
+                    #     sys_out_batch = self.model(sample) # 64 X 50 X 6632
+                    # print(sys_out_batch)
                     del loss
 
                 logging_outputs.append(logging_output)
