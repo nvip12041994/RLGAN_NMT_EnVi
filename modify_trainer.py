@@ -869,7 +869,7 @@ class Trainer(object):
         metrics.log_stop_time("train_wall")
         print("--------------------START DEBUG---------------------------------")
         print("SAMPLE")
-        print(len(samples))
+        print(type(samples))
         print(sample_size)
         # print("----------------------------------------------------------------")
         # print("LOG_OUTPUT")
