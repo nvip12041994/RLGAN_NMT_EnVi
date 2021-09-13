@@ -22,7 +22,7 @@ from omegaconf import DictConfig
 
 
 def main(cfg: DictConfig):
-
+    print(cfg)
     if isinstance(cfg, Namespace):
         cfg = convert_namespace_to_omegaconf(cfg)
 
@@ -398,7 +398,8 @@ def _main(cfg: DictConfig, output_file):
 def cli_main():
     parser = options.get_generation_parser()
     cur_model = ['./data-bin/iwslt15.tokenized.en-vi', 
-                 '--path', 'checkpoints/transformer/checkpoint_best.pt']
+                 '--path', 'checkpoints/transformer/checkpoint_best.pt',
+                 '--quiet']
     args = options.parse_args_and_arch(parser, input_args = cur_model)
     main(args)
 
