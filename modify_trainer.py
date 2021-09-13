@@ -651,21 +651,24 @@ class Trainer(object):
                         update_num=self.get_num_updates(),
                         ignore_grad=is_dummy_batch,
                     )
-                    print(discriminator)
-                    print(translator)
+                    #print(discriminator)
+                    #print(translator)
                     # src_sentence = sample["net_input"]["src_tokens"]
                     # src_lengths = sample["net_input"]["src_lengths"]
                     # prev_output_tokens = sample["net_input"]["prev_output_tokens"]
-                    # true_sentence = sample['target'].view(-1) 
+                    true_sentence = sample['target'].view(-1) 
                     # print("src_sentence")
                     # print(src_sentence)
                     # print("src_lengths")
                     # print(src_lengths)
                     # print("prev_output_tokens")
                     # print(prev_output_tokens)
-                    # print("----------------------------------------------------------------")
-                    # print(true_sentence)
-                    # print("----------------------------------------------------------------")
+                    print("----------------------------------------------------------------")
+                    print(true_sentence)
+                    print("----------------------------------------------------------------")
+                    out = translator.generate(sample)
+                    print(out)
+                    print("----------------------------------------------------------------")
                     # net_output = self.model(**sample["net_input"])
                     # target = self.model.get_targets(sample, net_output).view(-1)
                     # lprobs = self.model.get_normalized_probs(net_output, log_probs=True)
