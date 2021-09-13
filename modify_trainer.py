@@ -653,8 +653,8 @@ class Trainer(object):
                     )
                     #print(discriminator)
                     #print(translator)
-                    # src_sentence = sample["net_input"]["src_tokens"]
-                    # src_lengths = sample["net_input"]["src_lengths"]
+                    src_sentence = sample["net_input"]["src_tokens"]
+                    src_lengths = sample["net_input"]["src_lengths"]
                     # prev_output_tokens = sample["net_input"]["prev_output_tokens"]
                     true_sentence = sample['target'].view(-1) 
                     # print("src_sentence")
@@ -663,10 +663,11 @@ class Trainer(object):
                     # print(src_lengths)
                     # print("prev_output_tokens")
                     # print(prev_output_tokens)
+                    print(type(sample))
                     print("----------------------------------------------------------------")
                     print(true_sentence)
                     print("----------------------------------------------------------------")
-                    out = translator.generate(sample)
+                    out = translator.generate([sample])
                     print(out)
                     print("----------------------------------------------------------------")
                     # net_output = self.model(**sample["net_input"])
