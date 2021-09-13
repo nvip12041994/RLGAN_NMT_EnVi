@@ -609,7 +609,7 @@ class Trainer(object):
         self._dummy_batch = batch
 
     @metrics.aggregate("train")
-    def train_step(self, samples, raise_oom=False):
+    def train_step(self, samples, discriminator = None, translator=None , raise_oom=False):
         """Do forward, backward and parameter update."""
         print("--------------------START DEBUG---------------------------------")
         self._set_seed()
@@ -651,35 +651,37 @@ class Trainer(object):
                         update_num=self.get_num_updates(),
                         ignore_grad=is_dummy_batch,
                     )
-                    src_sentence = sample["net_input"]["src_tokens"]
-                    src_lengths = sample["net_input"]["src_lengths"]
-                    prev_output_tokens = sample["net_input"]["prev_output_tokens"]
-                    true_sentence = sample['target'].view(-1) 
-                    print("src_sentence")
-                    print(src_sentence)
-                    print("src_lengths")
-                    print(src_lengths)
-                    print("prev_output_tokens")
-                    print(prev_output_tokens)
-                    print("----------------------------------------------------------------")
-                    print(true_sentence)
-                    print("----------------------------------------------------------------")
-                    net_output = self.model(**sample["net_input"])
-                    target = self.model.get_targets(sample, net_output).view(-1)
-                    lprobs = self.model.get_normalized_probs(net_output, log_probs=True)
+                    print(discriminator)
+                    print(translator)
+                    # src_sentence = sample["net_input"]["src_tokens"]
+                    # src_lengths = sample["net_input"]["src_lengths"]
+                    # prev_output_tokens = sample["net_input"]["prev_output_tokens"]
+                    # true_sentence = sample['target'].view(-1) 
+                    # print("src_sentence")
+                    # print(src_sentence)
+                    # print("src_lengths")
+                    # print(src_lengths)
+                    # print("prev_output_tokens")
+                    # print(prev_output_tokens)
+                    # print("----------------------------------------------------------------")
+                    # print(true_sentence)
+                    # print("----------------------------------------------------------------")
+                    # net_output = self.model(**sample["net_input"])
+                    # target = self.model.get_targets(sample, net_output).view(-1)
+                    # lprobs = self.model.get_normalized_probs(net_output, log_probs=True)
                     
-                    out_batch = lprobs.view(-1, lprobs.size(-1))
-                    _,prediction = out_batch.topk(1)
-                    prediction = prediction.squeeze(1)
-                    fake_sentence = torch.reshape(prediction, src_sentence.shape)
-                    print(len(target))
-                    print(fake_sentence)
-                    print(len(fake_sentence))
+                    # out_batch = lprobs.view(-1, lprobs.size(-1))
+                    # _,prediction = out_batch.topk(1)
+                    # prediction = prediction.squeeze(1)
+                    # fake_sentence = torch.reshape(prediction, src_sentence.shape)
+                    # print(len(target))
+                    # print(fake_sentence)
+                    # print(len(fake_sentence))
                     # with torch.no_grad():
                     #     net_output_2 = self.model(src_sentence,src_lengths,prev_output_tokens)
                     # out_batch = net_output_2.contiguous().view(-1, net_output_2.size(-1))
                     
-                    print("----------------------------------------------------------------")
+                    
                     
                     # with torch.no_grad():
                     #     sys_out_batch = self.model(sample) # 64 X 50 X 6632

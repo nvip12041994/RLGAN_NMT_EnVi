@@ -207,7 +207,7 @@ def main(cfg: FairseqConfig) -> None:
         # else:
         #     # MLE training
         #     print("MLE Training")
-        valid_losses, should_stop = train(cfg, trainer, task, epoch_itr, discriminator)
+        valid_losses, should_stop = train(cfg, trainer, task, epoch_itr, discriminator, translator)
         if should_stop:
             break
 
@@ -266,7 +266,7 @@ def should_stop_early(cfg: DictConfig, valid_loss: float) -> bool:
 
 @metrics.aggregate("train")
 def train(
-    cfg: DictConfig, trainer: Trainer, task: tasks.FairseqTask, epoch_itr, discriminator
+    cfg: DictConfig, trainer: Trainer, task: tasks.FairseqTask, epoch_itr, discriminator, translator
 ) -> Tuple[List[Optional[float]], bool]:
     """Train the model for one epoch and return validation losses."""
     # Initialize data iterator
@@ -311,7 +311,7 @@ def train(
     progress.update_config(_flatten_config(cfg))
 
     trainer.begin_epoch(epoch_itr.epoch)
-    print(discriminator)
+    #print(discriminator)
     valid_subsets = cfg.dataset.valid_subset.split(",")
     should_stop = False
     num_updates = trainer.get_num_updates()
@@ -321,7 +321,7 @@ def train(
         with metrics.aggregate("train_inner"), torch.autograd.profiler.record_function(
             "train_step-%d" % i
         ):
-            log_output = trainer.train_step(samples)
+            log_output = trainer.train_step(samples, discriminator, translator)
             # print("--------------------START DEBUG---------------------------------")
             # print("SAMPLE")
             # print(samples)
