@@ -651,7 +651,15 @@ class Trainer(object):
                         ignore_grad=is_dummy_batch,
                     )
                     src_sentence = sample['net_input']['src_tokens']
+                    src_lengths = sample["net_input"]["src_lengths"]
+                    print("src_sentence")
                     print(src_sentence)
+                    print("src_lengths")
+                    print(src_lengths)
+                    print("----------------------------------------------------------------")
+                    print(sample)
+                    net_output = self.model(**sample["net_input"])
+                    
                     # with torch.no_grad():
                     #     sys_out_batch = self.model(sample) # 64 X 50 X 6632
                     # print(sys_out_batch)
