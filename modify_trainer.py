@@ -664,15 +664,13 @@ class Trainer(object):
                     print("----------------------------------------------------------------")
                     print(true_sentence)
                     net_output_1 = self.model(**sample["net_input"])
+                    target = self.model.get_targets(sample, net_output_1).view(-1)
+                    print("----------------------------------------------------------------")
+                    print(target)
+                    #net_output_2 = self.model(src_sentence,src_lengths,prev_output_tokens)
                     
                     print("----------------------------------------------------------------")
-                    net_output_2 = self.model(src_sentence,src_lengths,prev_output_tokens)
                     
-                    print("----------------------------------------------------------------")
-                    with open('net_output_1.pickle', 'wb') as f:
-                        pickle.dump(net_output_1, f)
-                    with open('net_output_2.pickle', 'wb') as f:
-                        pickle.dump(net_output_2, f)
                     # with torch.no_grad():
                     #     sys_out_batch = self.model(sample) # 64 X 50 X 6632
                     # print(sys_out_batch)
