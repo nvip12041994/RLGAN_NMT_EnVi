@@ -662,9 +662,11 @@ class Trainer(object):
                     print(prev_output_tokens)
                     print("----------------------------------------------------------------")
                     print(true_sentence)
-                    net_output = self.model(**sample["net_input"])
+                    net_output_1 = self.model(**sample["net_input"])
                     print("----------------------------------------------------------------")
-                    print(net_output)
+                    net_output_2 = self.model(src_sentence,src_lengths,prev_output_tokens)
+                    print("----------------------------------------------------------------")
+                    print(torch.equal(net_output_1,net_output_2))
                     # with torch.no_grad():
                     #     sys_out_batch = self.model(sample) # 64 X 50 X 6632
                     # print(sys_out_batch)
