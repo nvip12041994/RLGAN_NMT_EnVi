@@ -32,6 +32,7 @@ from fairseq.logging import meters, metrics, progress_bar
 from fairseq.model_parallel.megatron_trainer import MegatronTrainer
 from modify_trainer import Trainer
 from omegaconf import DictConfig, OmegaConf
+from fairseq.sequence_generator import SequenceGenerator
 
 import random
 import torch
@@ -136,6 +137,25 @@ def main(cfg: FairseqConfig) -> None:
     print("Discriminator criterion loaded successfully!")
     pg_criterion = PGLoss(ignore_index=task.tgt_dict.pad(), size_average=True,reduce=True)
     print("Policy gradient criterion loaded successfully!")
+    # Initialize generator
+    translator = SequenceGenerator(
+        [model],
+        task.tgt_dict.get_metadata(),
+        maxlen=cfg.max_target_positions,
+        beam_size=cfg.beam,
+        stop_early=(not cfg.no_early_stop),
+        normalize_scores=(not cfg.unnormalized),
+        len_penalty=cfg.lenpen,
+        unk_penalty=cfg.unkpen,
+        sampling=cfg.sampling,
+        sampling_topk=cfg.sampling_topk,
+        minlen=cfg.min_len,
+        sampling_temperature=cfg.sampling_temperature
+    )
+
+    if use_cuda:
+        translator.cuda()
+    print("SequenceGenerator loaded successfully!")
     # (optionally) Configure quantization
     if cfg.common.quantization_config_path is not None:
         quantizer = quantization_utils.Quantizer(

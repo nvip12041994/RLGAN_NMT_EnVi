@@ -22,7 +22,7 @@ from omegaconf import DictConfig
 
 
 def main(cfg: DictConfig):
-    print(cfg)
+    #print(cfg)
     if isinstance(cfg, Namespace):
         cfg = convert_namespace_to_omegaconf(cfg)
 
