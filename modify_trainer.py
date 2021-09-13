@@ -663,8 +663,20 @@ class Trainer(object):
                     print("----------------------------------------------------------------")
                     print(true_sentence)
                     net_output_1 = self.model(**sample["net_input"])
+                    file = open("net_output_1.txt", "w")
+                    #convert variable to string
+                    str1 = repr(net_output_1)
+                    file.write("net_output_1 = " + str + "\n")                    
+                    #close file
+                    file.close()
                     print("----------------------------------------------------------------")
                     net_output_2 = self.model(src_sentence,src_lengths,prev_output_tokens)
+                    file1 = open("net_output_2.txt", "w")
+                    #convert variable to string
+                    str1 = repr(net_output_2)
+                    file1.write("net_output_2 = " + str + "\n")                    
+                    #close file
+                    file1.close()
                     print("----------------------------------------------------------------")
                     print(torch.equal(net_output_1,net_output_2))
                     # with torch.no_grad():
