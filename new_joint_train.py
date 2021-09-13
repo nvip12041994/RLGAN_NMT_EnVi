@@ -140,17 +140,7 @@ def main(cfg: FairseqConfig) -> None:
     # Initialize generator
     translator = SequenceGenerator(
         [model],
-        task.tgt_dict.get_metadata(),
-        maxlen=cfg.max_target_positions,
-        beam_size=cfg.beam,
-        stop_early=(not cfg.no_early_stop),
-        normalize_scores=(not cfg.unnormalized),
-        len_penalty=cfg.lenpen,
-        unk_penalty=cfg.unkpen,
-        sampling=cfg.sampling,
-        sampling_topk=cfg.sampling_topk,
-        minlen=cfg.min_len,
-        sampling_temperature=cfg.sampling_temperature
+        task.tgt_dict
     )
 
     if use_cuda:
