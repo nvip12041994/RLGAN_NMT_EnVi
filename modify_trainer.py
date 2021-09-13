@@ -667,8 +667,7 @@ class Trainer(object):
                     net_output = self.model(**sample["net_input"])
                     target = self.model.get_targets(sample, net_output).view(-1)
                     lprobs = self.model.get_normalized_probs(net_output, log_probs=True)
-                    lprobs = lprobs[0 :, :, :].contiguous()
-                    target = target[0 :, :].contiguous()
+                    
                     out_batch = lprobs.view(-1, lprobs.size(-1))
                     _,prediction = out_batch.topk(1)
                     prediction = prediction.squeeze(1)
