@@ -650,16 +650,21 @@ class Trainer(object):
                         update_num=self.get_num_updates(),
                         ignore_grad=is_dummy_batch,
                     )
-                    src_sentence = sample['net_input']['src_tokens']
+                    src_sentence = sample["net_input"]["src_tokens"]
                     src_lengths = sample["net_input"]["src_lengths"]
+                    prev_output_tokens = sample["net_input"]["prev_output_tokens"]
+                    true_sentence = sample['target'].view(-1) 
                     print("src_sentence")
                     print(src_sentence)
                     print("src_lengths")
                     print(src_lengths)
+                    print("prev_output_tokens")
+                    print(prev_output_tokens)
                     print("----------------------------------------------------------------")
-                    print(sample)
+                    print(true_sentence)
                     net_output = self.model(**sample["net_input"])
-                    
+                    print("----------------------------------------------------------------")
+                    print(net_output)
                     # with torch.no_grad():
                     #     sys_out_batch = self.model(sample) # 64 X 50 X 6632
                     # print(sys_out_batch)
